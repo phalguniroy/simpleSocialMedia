@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import jwt_decode from 'jwt-decode'
+import { Link } from 'react-router-dom'
 
 class Profile extends Component {
   constructor() {
@@ -15,6 +16,7 @@ class Profile extends Component {
   componentDidMount() {
     const token = localStorage.usertoken
     const decoded = jwt_decode(token)
+    console.log(decoded)
     this.setState({
       first_name: decoded.first_name,
       last_name: decoded.last_name,
@@ -45,6 +47,11 @@ class Profile extends Component {
               </tr>
             </tbody>
           </table>
+          <button className="col-sm-12 mx-auto">
+      <h3 className="text-center"><Link to="/feeds" className="nav-link">
+                Go to feeds
+              </Link></h3>
+              </button>
         </div>
       </div>
     )

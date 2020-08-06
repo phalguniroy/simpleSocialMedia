@@ -81,7 +81,6 @@ router.get('/profile', (req, res) => {
     .then(user => {
       if (user) {
         res.json(user)
-        console.log(json(user))
       } else {
         res.send('User does not exist')
       }
@@ -90,21 +89,62 @@ router.get('/profile', (req, res) => {
       res.send('error: ' + err)
     })
 
-    Messages.findOne({
-      where: {
-        id: decoded.id
+    
+})
+
+
+router.post('/feeds', (req, res) => {
+  var decoded = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY)
+  const today = new Date()
+
+  const messageData = {
+    email: req.body.email,
+    message: req.body.message,
+    created: today
+  }
+
+  User.findOne({
+    where: {
+      email: decoded.email
+    }
+  })
+  .then(user => {
+          Messages.create(messageData)
+            .then(user => {
+              res.json({ status: user.email + ':   message is added' })
+            })
+            .catch(err => {
+              res.send('error: ' + err)
+            })
+        
+    })
+    .catch(err => {
+      res.send('error: ' + err)
+    })
+})
+
+
+
+
+router.get('/feeds', (req, res) => {
+  var decoded = jwt.verify(req.headers['authorization'], process.env.SECRET_KEY)
+  Messages.findAll({
+    where: {
+      email: decoded.email
+    }
+  })
+    .then(user => {
+      if (user) {
+        res.json(user)
+      } else {
+        res.send('User does not exist')
       }
     })
-      .then(user => {
-        if (user) {
-          res.json(user)
-        } else {
-          res.send('User does not exist')
-        }
-      })
-      .catch(err => {
-        res.send('error: ' + err)
-      })
+    .catch(err => {
+      res.send('error: ' + err)
+    })
+
+    
 })
 
 module.exports = router

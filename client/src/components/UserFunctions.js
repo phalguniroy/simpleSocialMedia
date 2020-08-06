@@ -34,3 +34,19 @@ export const login = user => {
       console.log(err)
     })
 }
+
+export const feed = async newMessage=>{
+  
+  const token = localStorage.usertoken
+  console.log(newMessage)
+  const result = await axios
+  .post('http://localhost:5000/users/feeds',{
+    email: newMessage.email,
+    message: newMessage.message
+  },
+  { headers: { Authorization: token } }
+  )
+
+  return result
+}
+
